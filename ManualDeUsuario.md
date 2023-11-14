@@ -1,6 +1,6 @@
-## Integrantes: Benjamín Ortíz Morales y Jean Karlo Buitrago Orozco
+#### Integrantes: Benjamín Ortíz Morales y Jean Karlo Buitrago Orozco
 ---
-## UML - https://github.com/JeanK4/UML/blob/main/Proyecto2.drawio
+#### UML - https://github.com/JeanK4/UML/blob/main/Proyecto2.drawio
 ---
 
 # Manual de Usuario - Aeropuerto Alfonso Bonilla Aragón
