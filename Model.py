@@ -140,6 +140,15 @@ class model:
                 p.setDisponible(disponible)
                 p.setVuelo(vuelo)
                 p.addHistorial(vuelo)
+                vuelo = p.getVuelo()
+                for vuelos in self.Aerolinea:
+                    for vuel in (self.Aerolinea[vuelos].getVuelos()):
+                        if (vuel.getNumIdent()) == vuelo:
+                            aero = vuel.getAeronaveAsignada()
+                            if aero:
+                                aero.set_estado(4)
+
+
 
     def asignarAeronaveVuelo(self, aeroline, tipo, model, vuelo):
         aeronave = self.Aerolinea[aeroline].buscarVueloModelo(model)
@@ -173,7 +182,7 @@ class model:
             if len(ans[aeroline]) == 0:
                 ct += 1
         if ct == len(self.Aerolinea):
-            ans  = {}
+            ans = {}
         return ans
 
     def getModeloHelicopteros(self):
@@ -188,7 +197,7 @@ class model:
             if len(ans[aeroline]) == 0:
                 ct += 1
         if ct == len(self.Aerolinea):
-            ans  = {}
+            ans = {}
         return ans
 
     def getModeloJets(self):
@@ -203,8 +212,31 @@ class model:
             if len(ans[aeroline]) == 0:
                 ct += 1
         if ct == len(self.Aerolinea):
-            ans  = {}
+            ans = {}
         return ans
-    
 
-    
+    def iniciarVuelo(self, puerta):
+        if puerta is not None:
+            puerta.setDisponible(True)
+            vuelo = puerta.getVuelo()
+            for vuelos in self.Aerolinea:
+                for vuel in (self.Aerolinea[vuelos].getVuelos()):
+                    if (vuel.getNumIdent()) == vuelo:
+                        aero = vuel.getAeronaveAsignada()
+                        if aero:
+                            aero.set_estado(5)
+
+
+    def getObjVuelos(self):
+        aux = []
+        for vuelos in self.Aerolinea:
+            for vuel in (self.Aerolinea[vuelos].getVuelos()):
+                aux.append(vuel)
+        return aux
+
+    def finalizarVuelo(self, vueloAsig, objVuelos):
+        for i in range(len(objVuelos)):
+            if (objVuelos[i].getAeronaveAsignada() is not None):
+                if (objVuelos[i].getNumIdent() == vueloAsig):
+                    objVuelos[i].getAeronaveAsignada().set_estado(3)
+

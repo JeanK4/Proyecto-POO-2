@@ -36,6 +36,7 @@ class controller:
             pass
 
         elif opcion == "Iniciar Vuelo":
+            self.iniciarVuelo()
             pass
 
         elif opcion == "Crear Puerta Embarque":
@@ -43,6 +44,7 @@ class controller:
             pass
 
         elif opcion == "Finalizar Vuelo":
+            self.finalizarVuelo()
             pass
 
         elif opcion == "Asignar Puertas":
@@ -91,7 +93,6 @@ class controller:
                                      passenger["correo"], passenger["nacionalidad"], passenger["ctMaletas"],
                                      passenger["infoMedica"])
 
-
     def menu_paises(self):
         st.header("Bienvenido a la Guía de Paises")
         st.markdown("## Información")
@@ -103,7 +104,7 @@ class controller:
 
     def getPaises(self, pais):
         url = "https://restcountries.com/v3.1/name/" + pais
-        respuesta =requests.get(url)
+        respuesta = requests.get(url)
         if respuesta.status_code == 200:
             datos = json.loads(respuesta.text)
             st.write("Nombre: ", datos[0]["name"]["common"])
@@ -179,10 +180,21 @@ class controller:
         avion = self.model.getModeloAviones()
         heli = self.model.getModeloHelicopteros()
         jet = self.model.getModeloJets()
-        if len(avion) == 0 and len(heli) == 0 and len(jet) == 0: 
+        if len(avion) == 0 and len(heli) == 0 and len(jet) == 0:
             st.error("Sin aeronaves disponibles")
         else:
             vuelos = self.model.getVuelosAerolinea()
             selec = self.view.asignarAeronaveVuelo(avion, heli, jet, vuelos)
             if selec != None:
                 self.model.asignarAeronaveVuelo(selec["aerolinea"], selec["tipo"], selec["selec"], selec["vuelo"])
+
+    def iniciarVuelo(self):
+        puertas = self.model.getPuertaEmbarque()
+        puertaSelec = self.view.iniciarVuelo(puertas)
+        self.model.iniciarVuelo(puertaSelec)
+
+    def finalizarVuelo(self):
+        vuelos = self.model.getVuelosAerolinea()
+        objVuelos = self.model.getObjVuelos()
+        vueloAsig = self.view.finalizarVuelo(vuelos, objVuelos)
+        self.model.finalizarVuelo(vueloAsig, objVuelos)

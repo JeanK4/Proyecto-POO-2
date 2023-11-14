@@ -315,7 +315,7 @@ class view:
         aerolineas = st.session_state['Aerolinea']
         puertaAsignada = st.selectbox("Seleccione Puerta de Embarque", data)
 
-        for i, puerta in enumerate(puertas, start=1):
+        for puerta in puertas:
             if puertaAsignada == puerta.getUbicacion():
                 aux = puerta.getDisponible()
 
@@ -328,6 +328,9 @@ class view:
                     for flight in vuelos[aero]:
                         aux.append(flight)
                     vueloAsignado = st.selectbox("Seleccione Vuelo Asignado", aux)
+
+
+
 
             but = st.button("Asignar Puerta de Embarque", type="primary")
             if but:
@@ -343,7 +346,7 @@ class view:
         else:
             st.error("No hay puertas disponibles")
 
-    def asignarAeronaveVuelo(self, avion, heli, jet, vuelos): #Avion, Heli, Jet no entran con sus valores
+    def asignarAeronaveVuelo(self, avion, heli, jet, vuelos):
         global selec
         aerolinea = st.session_state['Aerolinea']
         aerolineas = list(aerolinea.keys())
@@ -368,5 +371,41 @@ class view:
                     "selec": selec,
                     "vuelo": vuelo
                     }
+        else:
+            return None
+
+    def iniciarVuelo(self, puertas):
+        data = []
+        for i, puerta in enumerate(puertas, start=1):
+            data.append(puerta.getUbicacion())
+
+        st.header("Inicio de Vuelo")
+        puertaAsignada = st.selectbox("Seleccione Puerta de Embarque donde se ubica el vuelo", data)
+
+        for puerta in puertas:
+            if(puerta.getUbicacion() == puertaAsignada):
+                puertaAsignada = puerta
+
+        but = st.button("Iniciar Vuelo")
+        if but:
+            st.success(f"Vuelo iniciado con exito.")
+            return puertaAsignada
+        else:
+            return None
+
+    def finalizarVuelo(self, vuelos, objVuelos):
+        st.header("Finalizar Vuelos")
+        aux = []
+        for i in range(len(objVuelos)):
+            if(objVuelos[i].getAeronaveAsignada() is not None):
+                if(objVuelos[i].getAeronaveAsignada().get_estado() == 5):
+                    aux.append(objVuelos[i].getNumIdent())
+
+        vueloAsig = st.selectbox("Seleccione el vuelo", aux)
+
+        but = st.button("Finalizar Vuelo")
+        if but:
+            st.success(f"Vuelo iniciado con exito.")
+            return vueloAsig
         else:
             return None

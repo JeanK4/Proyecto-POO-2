@@ -3,6 +3,7 @@ from vuelo import Vuelo
 from aeronave import Helicoptero, Avion, Jets
 from tripulante import Tripulante
 
+
 class Aeropuerto:
 
     def __init__(self, nameAirport):
@@ -18,7 +19,7 @@ class Aeropuerto:
 
     def getVuelos(self):
         return self.vuelos
-    
+
     def getPasajeros(self):
         return self.pasajeros
 
@@ -47,9 +48,9 @@ class Aeropuerto:
             for i, vuelo in enumerate(self.vuelos):
                 aeronave = vuelo.getAeronaveAsignada()
                 if (
-                    aeronave.get_capacidad_pasajeros() > 0
-                    and aeronave.get_ct_vuelos() < 3
-                    and vuelo.getTipoVuelo() == opcion
+                        aeronave.get_capacidad_pasajeros() > 0
+                        and aeronave.get_ct_vuelos() < 3
+                        and vuelo.getTipoVuelo() == opcion
                 ):
                     x = i + 1
                     permiso = False
@@ -97,8 +98,8 @@ class Aeropuerto:
 
         for vuelo in self.vuelos:
             if (
-                vuelo.getNumIdent() == numvuelo
-                and vuelo.getAeronaveAsignada() is not None
+                    vuelo.getNumIdent() == numvuelo
+                    and vuelo.getAeronaveAsignada() is not None
             ):
                 flag = True
                 print("Número de Vuelo:", vuelo.getNumIdent())
@@ -114,12 +115,13 @@ class Aeropuerto:
 
     def anadirVuelo(self):
         flight = Vuelo()
-        opcion = int(input("Digite el tipo de vuelo:\n1. Vuelo Comercial\n2. Vuelo de Carga\n3. Helicóptero\n4. Jet Privado\n"))
+        opcion = int(
+            input("Digite el tipo de vuelo:\n1. Vuelo Comercial\n2. Vuelo de Carga\n3. Helicóptero\n4. Jet Privado\n"))
         flight.setTipoVuelo(opcion)
         x = 0
         tmp3 = None
 
-        if len(self.vuelos) == 0 :
+        if len(self.vuelos) == 0:
             if opcion == 1:
                 marca = (input("Ingrese la marca del avión (texto): "))
                 modelo = (int(input("Ingrese el modelo del avión (número): ")))
@@ -131,7 +133,8 @@ class Aeropuerto:
                 ct_vuelos = x
                 altitud_max = (input("Ingrese la altitud máxima del avión (texto): "))
                 cant_motores = (int(input("Ingrese la cantidad de motores del avión (número): ")))
-                AvionComercial = Avion(marca, modelo, capacidad_pasajeros, velocidad_maxima, autonomia, ano_fabricacion, estado, altitud_max, cant_motores)
+                AvionComercial = Avion(marca, modelo, capacidad_pasajeros, velocidad_maxima, autonomia, ano_fabricacion,
+                                       estado, altitud_max, cant_motores)
                 tmp3 = AvionComercial
             elif opcion == 2:
                 marca = (input("Ingrese la marca del avión (texto): "))
@@ -144,7 +147,8 @@ class Aeropuerto:
                 ct_vuelos = x
                 altitud_max = (input("Ingrese la altitud máxima del avión (texto): "))
                 cant_motores = (int(input("Ingrese la cantidad de motores del avión (número): ")))
-                AvionCarga = Avion(marca, modelo, capacidad_pasajeros, velocidad_maxima, autonomia, ano_fabricacion, estado, altitud_max, cant_motores)
+                AvionCarga = Avion(marca, modelo, capacidad_pasajeros, velocidad_maxima, autonomia, ano_fabricacion,
+                                   estado, altitud_max, cant_motores)
                 tmp3 = AvionCarga
             elif opcion == 3:
                 Marca = (input("Ingrese la marca del helicóptero (texto): "))
@@ -159,7 +163,8 @@ class Aeropuerto:
                 CapacidadElevacion = (input("Ingrese la capacidad de elevación del helicóptero (texto): "))
                 uso = int(input("Digite el tipo de uso:\n1. Rescate\n2. Turismo\n3. Transporte\n4. Medicina\n"))
                 Uso = uso
-                heli = Helicoptero(Marca, Modelo, CapacidadPasajeros, VelocidadMaxima, Autonomia, AnoFabricacion ,Estado, CntRotores, CapacidadElevacion, Uso)
+                heli = Helicoptero(Marca, Modelo, CapacidadPasajeros, VelocidadMaxima, Autonomia, AnoFabricacion,
+                                   Estado, CntRotores, CapacidadElevacion, Uso)
                 tmp3 = heli
             elif opcion == 4:
 
@@ -173,11 +178,11 @@ class Aeropuerto:
                 CtVuelos = x
                 Propietario = (input("Ingrese el nombre del propietario del jet (texto): "))
 
-
                 servicios = set()
                 flag = False
                 while not flag:
-                    servicio = int(input("Digite el tipo de uso:\n1. Bar\n2. Entretenimiento VIP\n3. Dormitorio privado\n4. Chef privado\n5. Salir\n"))
+                    servicio = int(input(
+                        "Digite el tipo de uso:\n1. Bar\n2. Entretenimiento VIP\n3. Dormitorio privado\n4. Chef privado\n5. Salir\n"))
                     if servicio == 5:
                         flag = True
                     elif servicio == 1:
@@ -201,7 +206,8 @@ class Aeropuerto:
 
                 DestinosFrec = (list(destinos))
 
-                jet = Jets(Marca, Modelo, CapacidadPasajeros, VelocidadMaxima, Autonomia, AnoFabricacion, Estado, Propietario, Servicios, DestinosFrec)
+                jet = Jets(Marca, Modelo, CapacidadPasajeros, VelocidadMaxima, Autonomia, AnoFabricacion, Estado,
+                           Propietario, Servicios, DestinosFrec)
 
                 tmp3 = jet
 
@@ -220,7 +226,8 @@ class Aeropuerto:
                     break
 
             if not naveAsignada:
-                print("No hay naves disponibles con menos de 3 vuelos del tipo seleccionado, por favor, crea una nueva nave.")
+                print(
+                    "No hay naves disponibles con menos de 3 vuelos del tipo seleccionado, por favor, crea una nueva nave.")
                 if opcion == 1:
                     marca = (input("Ingrese la marca del avión (texto): "))
                     modelo = (int(input("Ingrese el modelo del avión (número): ")))
@@ -314,10 +321,14 @@ class Aeropuerto:
                     print("Opción inválida.")
             flight.setAeronaveAsignada(tmp3)
 
-        capitan = Tripulante("12345", "Juan", "01/01/1980", "Masculino", "Calle 123", "123456789", "juan@gmail.com", "Capitan", 10, 1000)
-        azafata = Tripulante("67890", "María", "05/12/1992", "Femenino", "Avenida Principal", "987654321", "maria@outlook.com", "Azafata", 5, 800)
-        copiloto = Tripulante("6789", "Carlos", "02/05/1985", "Masculino", "Calle Principal 456", "987654321", "carlos@yahoo.es", "Copiloto", 8, 900)
-        auxiliarDeVuelo = Tripulante("5678", "Laura", "15/09/1990", "Femenino", "Avenida Secundaria 789", "123456789", "laura@gmail.com", "Auxiliar de Vuelo", 6, 850)
+        capitan = Tripulante("12345", "Juan", "01/01/1980", "Masculino", "Calle 123", "123456789", "juan@gmail.com",
+                             "Capitan", 10, 1000)
+        azafata = Tripulante("67890", "María", "05/12/1992", "Femenino", "Avenida Principal", "987654321",
+                             "maria@outlook.com", "Azafata", 5, 800)
+        copiloto = Tripulante("6789", "Carlos", "02/05/1985", "Masculino", "Calle Principal 456", "987654321",
+                              "carlos@yahoo.es", "Copiloto", 8, 900)
+        auxiliarDeVuelo = Tripulante("5678", "Laura", "15/09/1990", "Femenino", "Avenida Secundaria 789", "123456789",
+                                     "laura@gmail.com", "Auxiliar de Vuelo", 6, 850)
         flight.addTripulantesAbordo(capitan)
         flight.addTripulantesAbordo(azafata)
         flight.addTripulantesAbordo(copiloto)
