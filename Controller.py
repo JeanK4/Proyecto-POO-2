@@ -33,6 +33,7 @@ class controller:
             pass
 
         elif opcion == "Pedir Actualización":
+            self.pedirActualizacion()
             pass
 
         elif opcion == "Iniciar Vuelo":
@@ -57,26 +58,32 @@ class controller:
 
     def menu_aeropuerto(self):
         st.title("Menú de Usuario Aeropuerto")
-        opcion = st.sidebar.selectbox("Opciones", ["Crear Pasajero", "Ver Pasajeros", "Ver vuelos", "Comprar vuelos"])
-        if opcion == "Crear Pasajero":
-            self.crearPasajero()
-            pass
-        elif opcion == "Ver Pasajeros":
+        opcion = st.sidebar.selectbox("Opciones", ["Ver Pasajeros", "Ver vuelos", "Comprar vuelos", "Ver Tripulantes"])
+        if opcion == "Ver Pasajeros":
             self.mostrarPasajeros()
             pass
         elif opcion == "Ver vuelos":
             self.mostrarVuelos()
             pass
+        elif opcion == "Ver Tripulantes":
+            self.mostrarTripulantes()
+            pass
+        elif opcion == "Comprar vuelos":
+            self.comprarVuelos()
+            pass
 
     def menu_aerolinea(self):
         st.title("Menú de Usuario Aerolínea")
         opcion = st.sidebar.selectbox("Opciones",
-                                      ["Crear Aerolínea", "Crear Aeronave", "Mostrar Aeronaves", "Crear Vuelo", ])
+                                      ["Crear Aerolínea", "Crear Aeronave", "Mostrar Aeronaves", "Crear Vuelo","Crear Tripulante"])
         if opcion == "Crear Aerolínea":
             self.crearAerolinea()
             pass
         elif opcion == "Crear Vuelo":
             self.crearVuelos()
+            pass
+        elif opcion == "Crear Tripulante":
+            self.crearTripulante()
             pass
         elif opcion == "Crear Aeronave":
             self.crearAeronave()
@@ -84,14 +91,6 @@ class controller:
         elif opcion == "Mostrar Aeronaves":
             self.mostrarAeronaves()
             pass
-
-    def crearPasajero(self):
-        passenger = self.view.crearPasajero()
-        if passenger != None:
-            self.model.crearPasajero(passenger["cedula"], passenger["nombre"], passenger["fechaNacimiento"],
-                                     passenger["genero"], passenger["direccion"], passenger["telefono"],
-                                     passenger["correo"], passenger["nacionalidad"], passenger["ctMaletas"],
-                                     passenger["infoMedica"])
 
     def menu_paises(self):
         st.header("Bienvenido a la Guía de Paises")
@@ -104,7 +103,7 @@ class controller:
 
     def getPaises(self, pais):
         url = "https://restcountries.com/v3.1/name/" + pais
-        respuesta = requests.get(url)
+        respuesta =requests.get(url)
         if respuesta.status_code == 200:
             datos = json.loads(respuesta.text)
             st.write("Nombre: ", datos[0]["name"]["common"])
@@ -136,6 +135,19 @@ class controller:
     def mostrarVuelos(self):
         aerolineVuelos = self.model.mostrarVuelos()
         self.view.mostrarVuelos(aerolineVuelos)
+
+    def comprarVuelos(self):
+        aerolineVuelos = self.model.mostrarVuelosCompra()
+        if aerolineVuelos == None:
+            st.warning("Sin vuelos disponibles")
+        else:
+            data = self.view.comprarVuelo(aerolineVuelos)
+            if data != None:
+                pasajero = self.model.crearPasajero(data["cedula"], data["nombre"], data["fechaNacimiento"],
+                                        data["genero"], data["direccion"], data["telefono"],
+                                        data["correo"], data["nacionalidad"], data["ctMaletas"],
+                                        data["infoMedica"])
+                self.model.comprarVuelo(data["vuelo"], data["aerolinea"], pasajero)
 
     def crearAeronave(self):
         aeronave = self.view.crearAeronave()
@@ -180,7 +192,7 @@ class controller:
         avion = self.model.getModeloAviones()
         heli = self.model.getModeloHelicopteros()
         jet = self.model.getModeloJets()
-        if len(avion) == 0 and len(heli) == 0 and len(jet) == 0:
+        if len(avion) == 0 and len(heli) == 0 and len(jet) == 0: 
             st.error("Sin aeronaves disponibles")
         else:
             vuelos = self.model.getVuelosAerolinea()
@@ -198,3 +210,19 @@ class controller:
         objVuelos = self.model.getObjVuelos()
         vueloAsig = self.view.finalizarVuelo(vuelos, objVuelos)
         self.model.finalizarVuelo(vueloAsig, objVuelos)
+
+    def pedirActualizacion(self):
+        vuelos = self.model.pedirActualizacion()
+        self.view.pedirActualizacion(vuelos)
+
+    def crearTripulante(self):
+        tripulante = self.view.crearTripulante()
+        if tripulante is not None:
+            self.model.crearTripulante(tripulante["cedula"], tripulante["nombre"], tripulante["fechaNacimiento"], tripulante["genero"],
+                                       tripulante["direccion"], tripulante["telefono"], tripulante["correo"], tripulante["puesto"], 
+                                       tripulante["experienciaAnos"], tripulante["horasMax"], tripulante["aerolinea"])
+    
+    def mostrarTripulantes(self):
+        dic_tripulacion = self.model.mostrarTripulantes()
+        self.view.mostrarTripulantes(dic_tripulacion)
+        return

@@ -8,35 +8,6 @@ class view:
         st.title("Aeropuerto Alfonso Bonilla Aragón")
         st.divider()
 
-    def crearPasajero(self):
-        cedula = st.text_input("Cédula: ")
-        nombre = st.text_input("Nombre: ")
-        fechaNacimiento = st.text_input("Fecha de Nacimiento: ")
-        genero = st.selectbox('Género:', ['Masculino', 'Femenino', 'Otro'])
-        direccion = st.text_input("Direccion: ")
-        telefono = st.text_input("Teléfono: ")
-        correo = st.text_input("Correo: ")
-        nacionalidad = st.text_input("Nacionalidad: ")
-        ctMaletas = st.number_input("Cantidad de maletas: ", min_value=1)
-        infoMedica = st.text_input("Información médica: ")
-        but = st.button("Crear Pasajero", type="primary")
-        if but:
-            st.success(f"Pasajero creado con éxito.")
-            return {
-                "cedula": cedula,
-                "nombre": nombre,
-                "fechaNacimiento": fechaNacimiento,
-                "genero": genero,
-                "direccion": direccion,
-                "telefono": telefono,
-                "correo": correo,
-                "nacionalidad": nacionalidad,
-                "ctMaletas": ctMaletas,
-                "infoMedica": infoMedica
-            }
-        else:
-            return None
-
     def crearAerolinea(self):
         aeroline = st.text_input("Nombre Aerolinea: ")
         but = st.button("Crear Aerolinea", type="primary")
@@ -72,7 +43,6 @@ class view:
     def crearVuelo(self):
         aerolineas = st.session_state['Aerolinea']
         aerolinea_seleccionada = st.selectbox("Seleccione Aerolínea", list(aerolineas.keys()))
-        # vuelos = st.selectbox("Seleccion el tipo de vuelo", ["Comercial", "Privado"])
         hora = st.text_input("Hora del vuelo:")
         fecha = st.date_input("Fecha del vuelo: ")
         numIdent = st.text_input("Número del vuelo: ")
@@ -102,34 +72,77 @@ class view:
         for aero in aerolineVuelos:
             aerolinea = f"Aerolinea {aero}"
             st.header(aerolinea)
-            for flight in aerolineVuelos[aero]:
-                st.write(f"- Vuelo {flight}")
-                for j in range(len(aerolineVuelos[aero][flight])):
-                    if j == 0:
-                        caption1 += f"Hora: {aerolineVuelos[aero][flight][j]}"
-                    elif j == 1:
-                        caption2 += f"Fecha: {aerolineVuelos[aero][flight][j]}"
-                    elif j == 2:
-                        caption3 += f"Origen: {aerolineVuelos[aero][flight][j]}"
-                    elif j == 3:
-                        caption4 += f"Destino: {aerolineVuelos[aero][flight][j]}"
-                    elif j == 4:
-                        caption5 += f"Tipo de Vuelo: {aerolineVuelos[aero][flight][j]}"
-                    else:
-                        caption6 += f"Aeronave asignada: {aerolineVuelos[aero][flight][j]}"
-                st.markdown(caption1)
-                st.markdown(caption2)
-                st.markdown(caption3)
-                st.markdown(caption4)
-                st.markdown(caption5)
-                st.markdown(caption6)
-                caption1 = ""
-                caption2 = ""
-                caption3 = ""
-                caption4 = ""
-                caption5 = ""
-                caption6 = ""
-            st.divider()
+            if len(aerolineVuelos[aero]) != 0:
+                for flight in aerolineVuelos[aero]:
+                    st.write(f"- Vuelo {flight}")
+                    for j in range(len(aerolineVuelos[aero][flight])):
+                        if j == 0:
+                            caption1 += f"Hora: {aerolineVuelos[aero][flight][j]}"
+                        elif j == 1:
+                            caption2 += f"Fecha: {aerolineVuelos[aero][flight][j]}"
+                        elif j == 2:
+                            caption3 += f"Origen: {aerolineVuelos[aero][flight][j]}"
+                        elif j == 3:
+                            caption4 += f"Destino: {aerolineVuelos[aero][flight][j]}"
+                        elif j == 4:
+                            caption5 += f"Tipo de Vuelo: {aerolineVuelos[aero][flight][j]}"
+                        else:
+                            caption6 += f"Aeronave asignada: {aerolineVuelos[aero][flight][j]}"
+                    st.markdown(caption1)
+                    st.markdown(caption2)
+                    st.markdown(caption3)
+                    st.markdown(caption4)
+                    st.markdown(caption5)
+                    st.markdown(caption6)
+                    caption1 = ""
+                    caption2 = ""
+                    caption3 = ""
+                    caption4 = ""
+                    caption5 = ""
+                    caption6 = ""
+                st.divider()
+            else:
+                st.info("Aerolinea sin vuelos")
+
+    def comprarVuelo(self, vuelos):
+        aerolinea = st.session_state['Aerolinea']
+        aerolineas = list(aerolinea.keys())
+        aerolinea_seleccionada = st.selectbox("Seleccione una aerolinea: ", aerolineas)
+        tmp = []
+        for aero in vuelos:
+            for flight in vuelos[aero]:
+                if aero == aerolinea_seleccionada:
+                    tmp.append(f"{flight}")
+        vuelo = st.selectbox("Seleccione un vuelo: ", tmp)
+        cedula = st.text_input("Cédula: ")
+        nombre = st.text_input("Nombre: ")
+        fechaNacimiento = st.text_input("Fecha de Nacimiento: ")
+        genero = st.selectbox('Género:', ['Masculino', 'Femenino', 'Otro'])
+        direccion = st.text_input("Direccion: ")
+        telefono = st.text_input("Teléfono: ")
+        correo = st.text_input("Correo: ")
+        nacionalidad = st.text_input("Nacionalidad: ")
+        ctMaletas = st.number_input("Cantidad de maletas: ", min_value=1)
+        infoMedica = st.text_input("Información médica: ")       
+        but = st.button("Comprar Vuelo")
+        if but:
+            st.success("Vuelo comprado con éxito")
+            return {
+                "cedula": cedula,
+                "nombre": nombre,
+                "fechaNacimiento": fechaNacimiento,
+                "genero": genero,
+                "direccion": direccion,
+                "telefono": telefono,
+                "correo": correo,
+                "nacionalidad": nacionalidad,
+                "ctMaletas": ctMaletas,
+                "infoMedica": infoMedica,
+                "vuelo": vuelo,
+                "aerolinea": aerolinea_seleccionada,
+            }
+        else:
+            return None
 
     def mostrarAeronaves(self, aeronaves):
         st.divider()
@@ -329,9 +342,6 @@ class view:
                         aux.append(flight)
                     vueloAsignado = st.selectbox("Seleccione Vuelo Asignado", aux)
 
-
-
-
             but = st.button("Asignar Puerta de Embarque", type="primary")
             if but:
                 st.success(f"Puerta Asignada Con Éxito!!")
@@ -373,7 +383,7 @@ class view:
                     }
         else:
             return None
-
+        
     def iniciarVuelo(self, puertas):
         data = []
         for i, puerta in enumerate(puertas, start=1):
@@ -409,3 +419,92 @@ class view:
             return vueloAsig
         else:
             return None
+        
+    def pedirActualizacion(self, vuelos):
+        for aero in vuelos:
+            for flight in vuelos[aero]:
+                if vuelos[aero][flight][1] == 5:
+                    st.write(f"- Vuelo {flight}")
+                    st.write(f"Altitud: {vuelos[aero][flight][0]}")
+                    if vuelos[aero][flight][1] == 1:
+                        st.write(f"Estado: Servicio")
+                    elif vuelos[aero][flight][1] == 2:
+                        st.write(f"Estado: Totalmente asignado")
+                    elif vuelos[aero][flight][1] == 3:
+                        st.write(f"Estado: Mantenimiento")
+                    elif vuelos[aero][flight][1] == 4:
+                        st.write(f"Estado: En Puerta")
+                    elif vuelos[aero][flight][1] == 5:
+                        st.write(f"Estado: En el aire")
+                else:
+                    st.write(f"- Vuelo {flight}")
+                    if vuelos[aero][flight][1] == 1:
+                        st.write(f"Estado: Servicio")
+                    elif vuelos[aero][flight][1] == 2:
+                        st.write(f"Estado: Totalmente asignado")
+                    elif vuelos[aero][flight][1] == 3:
+                        st.write(f"Estado: Mantenimiento")
+                    elif vuelos[aero][flight][1] == 4:
+                        st.write(f"Estado: En Puerta")
+                    elif vuelos[aero][flight][1] == 5:
+                        st.write(f"Estado: En el aire")
+    
+    def crearTripulante(self):
+        aerolinea = st.session_state['Aerolinea']
+        aerolineas = list(aerolinea.keys())
+        aero = st.selectbox("Seleccione la aerolinea: ", aerolineas)
+        cedula = st.text_input("Digite su cedula: ")
+        nombre = st.text_input("Digite su nombre: ")
+        fechaNacimiento = st.text_input("Digite su fecha de nacimiento: ")
+        genero = st.selectbox('Género:', ['Masculino', 'Femenino', 'Otro'])
+        direccion = st.text_input("Direccion: ")
+        telefono = st.text_input("Telefono: ")
+        correo = st.text_input("Correo: ")
+        puesto = st.text_input("Puesto: ")
+        experienciaAnos = st.text_input("Años de Experiencia: ")
+        horasMax = st.text_input("Horas Máximas:")
+        but = st.button("Crear Tripulante")
+        if but:
+            st.success("Tripulante creado con éxito")
+            return{
+                "cedula": cedula,
+                "nombre": nombre,
+                "fechaNacimiento": fechaNacimiento,
+                "genero": genero,
+                "direccion": direccion,
+                "telefono": telefono,
+                "correo": correo,
+                "puesto": puesto,
+                "experienciaAnos": experienciaAnos,
+                "horasMax": horasMax,
+                "aerolinea": aero
+            }
+        else:
+            return None
+    
+    def mostrarTripulantes(self, dic_tripulacion):
+        st.divider()
+        st.header("Tripulantes")
+        for aero in dic_tripulacion:
+            st.header(f"Aerolinea {aero}")
+            data = []
+            for i, tripulante in enumerate(dic_tripulacion[aero], start=1):
+                data.append({
+                    "Cédula": tripulante.getCedula(),
+                    "Nombre": tripulante.getNombre(),
+                    "Fecha de Nacimiento": tripulante.getFechaNacimiento(),
+                    "Género": tripulante.getGenero(),
+                    "Direccion": tripulante.getDireccion(),
+                    "Teléfono": tripulante.getTelefono(),
+                    "Correo": tripulante.getCorreo(),
+                    "Puesto": tripulante.getPuesto(),
+                    "Años Experiencia": tripulante.getExperienciaAnos(),
+                    "Horas": tripulante.getHorasMax()
+                })
+
+            tabla_container = st.empty()
+            if not hasattr(tabla_container, 'table_created'):
+                tabla_container.table(data)
+                tabla_container.table_created = True
+            else:
+                tabla_container.table(data)

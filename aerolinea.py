@@ -10,6 +10,20 @@ class Aerolinea:
         self.nameAerolinea = nameAerolinea
         self.vuelos = []
         self.aeronaves = []
+        self.tripulacion = []
+    
+    def getTripulacion(self):
+        return self.tripulacion
+    
+    def addTripulacion(self, tripulante):
+        self.tripulacion.append(tripulante)
+
+    def setPasajeroVuelo(self, pasajero, vuelo):
+        for i in range(len(self.vuelos)):
+            aeronave = self.vuelos[i].getAeronaveAsignada()
+            print(aeronave.get_capacidad_pasajeros())
+            if self.vuelos[i].getNumIdent() == vuelo and len(self.vuelos[i].getPersonasAbordo()) < aeronave.get_capacidad_pasajeros():
+                self.vuelos[i].addPersonasAbordo(pasajero)
 
     def setAeronaveVuelo(self, numIdent, aeronave, tipo):
         for i in range(len(self.vuelos)):

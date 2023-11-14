@@ -148,8 +148,6 @@ class model:
                             if aero:
                                 aero.set_estado(4)
 
-
-
     def asignarAeronaveVuelo(self, aeroline, tipo, model, vuelo):
         aeronave = self.Aerolinea[aeroline].buscarVueloModelo(model)
         self.Aerolinea[aeroline].setAeronaveVuelo(vuelo, aeronave, tipo)
@@ -182,7 +180,7 @@ class model:
             if len(ans[aeroline]) == 0:
                 ct += 1
         if ct == len(self.Aerolinea):
-            ans = {}
+            ans  = {}
         return ans
 
     def getModeloHelicopteros(self):
@@ -197,7 +195,7 @@ class model:
             if len(ans[aeroline]) == 0:
                 ct += 1
         if ct == len(self.Aerolinea):
-            ans = {}
+            ans  = {}
         return ans
 
     def getModeloJets(self):
@@ -212,8 +210,32 @@ class model:
             if len(ans[aeroline]) == 0:
                 ct += 1
         if ct == len(self.Aerolinea):
-            ans = {}
+            ans  = {}
         return ans
+    
+    def mostrarVuelosCompra(self):
+        dic = {}
+        lista = []
+        aerolinea = st.session_state['Aerolinea']
+        aerolineas = list(aerolinea.keys())
+        i = 0
+        while i < len(aerolineas):
+            dic1 = {}
+            listatmp = aerolinea[aerolineas[i]].getVuelos()
+            for j in range(len(listatmp)):
+                if listatmp[j].getAeronaveAsignada().get_capacidad_pasajeros() > listatmp[j].getLenPersonasAbordo():
+                    lista.append(listatmp[j].getHora())
+                    lista.append(listatmp[j].getFecha())
+                    lista.append(listatmp[j].getCiudadOrigen())
+                    lista.append(listatmp[j].getCiudadDestino())
+                dic1[listatmp[j].getNumIdent()] = lista
+                lista = []
+            dic[aerolineas[i]] = dic1
+            i += 1
+        return dic
+
+    def comprarVuelo(self, vuelo, aerolinea, pasajero):
+        self.Aerolinea[aerolinea].setPasajeroVuelo(pasajero, vuelo)
 
     def iniciarVuelo(self, puerta):
         if puerta is not None:
@@ -225,7 +247,6 @@ class model:
                         aero = vuel.getAeronaveAsignada()
                         if aero:
                             aero.set_estado(5)
-
 
     def getObjVuelos(self):
         aux = []
@@ -240,3 +261,30 @@ class model:
                 if (objVuelos[i].getNumIdent() == vueloAsig):
                     objVuelos[i].getAeronaveAsignada().set_estado(3)
 
+    def pedirActualizacion(self):
+        dic = {}
+        aerolinea = st.session_state['Aerolinea']
+        aerolineas = list(aerolinea.keys())
+        i = 0
+        while i < len(aerolineas):
+            dic1 = {}
+            listatmp = aerolinea[aerolineas[i]].getVuelos()
+            for j in range(len(listatmp)):
+                aeronave = listatmp[j].getAeronaveAsignada()
+                lista = []
+                lista.append(listatmp[j].getAltitud())
+                lista.append(aeronave.get_estado())
+                dic1[listatmp[j].getNumIdent()] = lista
+            dic[aerolineas[i]] = dic1
+            i += 1
+        return dic
+
+    def crearTripulante(self, cedula, nombre, fechaNacimiento, genero, direccion, telefono, correo, puesto, experienciaAnos, horasMax, aeroline):
+        new_tripulante = Tripulante(cedula, nombre, fechaNacimiento, genero, direccion, telefono, correo, puesto, experienciaAnos, horasMax)
+        self.Aerolinea[aeroline].addTripulacion(new_tripulante)
+
+    def mostrarTripulantes(self):
+        dic = {}
+        for aero in self.Aerolinea:
+            dic[aero] = self.Aerolinea[aero].getTripulacion()
+        return dic

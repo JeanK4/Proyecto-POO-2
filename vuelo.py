@@ -35,6 +35,9 @@ class Vuelo:
     def getPersonasAbordo(self):
         return self.personasAbordo
 
+    def getLenPersonasAbordo(self):
+        return len(self.personasAbordo)
+
     def getAeronaveAsignada(self):
         return self.aeronaveAsignada
 
